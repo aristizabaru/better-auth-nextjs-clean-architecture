@@ -1,0 +1,21 @@
+import { PrismaPg } from "@prisma/adapter-pg";
+import { envServer } from "@/shared/config/env";
+import { PrismaClient } from "../../../generated/prisma/client";
+
+const globalForPrisma = globalThis as unknown as {
+  prisma: PrismaClient;
+};
+
+const adapter = new PrismaPg({
+  connectionString: envServer.DATABASE_URL,
+});
+
+const prisma =
+  globalForPrisma.prisma ||
+  new PrismaClient({
+    adapter,
+  });
+
+if (envServer.NODE_ENV !== "production") globalForPrisma.prisma = prisma;
+
+export default prisma;
