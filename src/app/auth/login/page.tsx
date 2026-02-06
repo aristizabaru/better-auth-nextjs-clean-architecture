@@ -8,6 +8,7 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components";
+import { SignUpForm } from "./_components/sign-up-form";
 
 export default function Login() {
   return (
@@ -32,7 +33,9 @@ export default function Login() {
             <CardHeader>
               <CardTitle className="text-2xl font-bold">Sign Up</CardTitle>
             </CardHeader>
-            <CardContent>Sign Up Form</CardContent>
+            <CardContent>
+              <SignUpForm />
+            </CardContent>
           </Card>
         </TabsContent>
       </Tabs>
