@@ -1,12 +1,13 @@
+import "server-only";
+
 import { z } from "zod";
 
 const serverSchema = z.object({
   NODE_ENV: z
     .enum(["development", "test", "production"])
     .default("development"),
-
   DATABASE_URL: z.string().min(1, "DATABASE_URL es requerida"),
-
+  BETTER_AUTH_URL: z.url({ protocol: /^https?(?::\/\/?|)$/ }), // Con http opcional para pruebas locales
   BETTER_AUTH_TRUSTED_ORIGINS: z
     .string()
     .min(1, "BETTER_AUTH_TRUSTED_ORIGINS es requerida"),
