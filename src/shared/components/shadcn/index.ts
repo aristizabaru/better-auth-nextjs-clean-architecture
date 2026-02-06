@@ -4,5 +4,7 @@ export * from "./field";
 export * from "./input";
 export * from "./label";
 export * from "./loading-swap";
+export * from "./password-input";
 export * from "./separator";
+export * from "./sonner";
 export * from "./tabs";
