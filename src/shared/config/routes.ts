@@ -6,4 +6,7 @@ export const routes = {
   protected: {
     dashboard: "/dashboard",
   },
+  public: {
+    home: "/",
+  },
 } as const;
