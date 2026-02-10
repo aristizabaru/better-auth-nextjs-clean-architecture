@@ -54,7 +54,7 @@ export const SignUpForm = () => {
       return;
     }
 
-    router.push(routes.protected.dashboard);
+    router.push(routes.public.home);
   }
 
   return (
