@@ -10,5 +10,3 @@ export const signUpSchema = z.object({
     .min(8, "El campo debe tener al menos 8 caracteres")
     .max(50, "El campo no debe superar los 50 caracteres"),
 });
-
-export type SignUpDTO = z.infer<typeof signUpSchema>;

@@ -4,7 +4,7 @@ import { signUpSchema } from "../validators/sign-up.schema";
 import { BetterAuthRepository } from "../../infrastructure/repositories/BetterAuthRepository";
 import { SignUpWithEmail } from "../../application/use-cases/SignUpWithEmail";
 import { mapAuthErrorToMessage } from "../errors/error-mapper";
-import { SignUpResult } from "../../application/dtos/SignUpResult";
+import { SignUpResult } from "../../application/dtos/AuthFlowResult";
 
 export type SignUpActionResult =
   | { ok: true; status: SignUpResult["status"] }
