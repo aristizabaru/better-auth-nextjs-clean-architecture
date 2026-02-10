@@ -1,5 +1,5 @@
+import type { SignUpResult } from "../dtos/AuthFlowResult";
 import type { SignUpEmailInput } from "../dtos/SignUpEmailInput";
-import type { SignUpResult } from "../dtos/SignUpResult";
 import type { AuthRepository } from "../ports/AuthRepository";
 
 export class SignUpWithEmail {
