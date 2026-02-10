@@ -2,18 +2,35 @@ import "server-only";
 
 import { auth } from "@/lib/auth/auth";
 import { SignUpFailedError } from "../../domain/errors/SignUpFailedError";
+import { SignInFailedError } from "../../domain/errors/SignInFailedError";
 import type { AuthRepository } from "../../application/ports/AuthRepository";
 import type { BetterAuthUser } from "../types/better-auth.types";
-import type { SignUpResult } from "../../application/dtos/SignUpResult";
 import type { SignUpEmailInput } from "../../application/dtos/SignUpEmailInput";
+import type { SignInEmailInput } from "../../application/dtos/SignInEmailInput";
+import type {
+  AuthFlowResult,
+  SignInResult,
+  SignUpResult,
+} from "../../application/dtos/AuthFlowResult";
 
 type SignUpEmailResponse = Awaited<ReturnType<typeof auth.api.signUpEmail>>;
-
-function map(user: BetterAuthUser): Pick<SignUpResult, "userId" | "email"> {
-  return { userId: user.id, email: user.email };
-}
+type SignInEmailResponse = Awaited<ReturnType<typeof auth.api.signInEmail>>;
 
 export class BetterAuthRepository implements AuthRepository {
+  private static mapUser(user: BetterAuthUser) {
+    return { userId: user.id, email: user.email };
+  }
+
+  private static mapAuthResponseToResult(result: {
+    token: string | null;
+    user: BetterAuthUser;
+  }): AuthFlowResult {
+    const base = BetterAuthRepository.mapUser(result.user);
+    return result.token === null
+      ? { status: "PENDING_VERIFICATION", ...base }
+      : { status: "SIGNED_IN", ...base };
+  }
+
   async signUpWithEmail(input: SignUpEmailInput): Promise<SignUpResult> {
     let result: SignUpEmailResponse;
 
@@ -23,15 +40,24 @@ export class BetterAuthRepository implements AuthRepository {
       throw new SignUpFailedError();
     }
 
-    const base = map(result.user);
-    const hasSession = result.token !== null;
+    return BetterAuthRepository.mapAuthResponseToResult({
+      token: result.token,
+      user: result.user,
+    });
+  }
 
-    // token string -> quedó autenticado
-    // token null   -> se creó usuario pero no sesión (típico si hay verificación requerida)
-    if (!hasSession) {
-      return { status: "PENDING_VERIFICATION", ...base };
+  async signInWithEmail(input: SignInEmailInput): Promise<SignInResult> {
+    let result: SignInEmailResponse;
+
+    try {
+      result = await auth.api.signInEmail({ body: input });
+    } catch {
+      throw new SignInFailedError();
     }
 
-    return { status: "SIGNED_IN", ...base };
+    return BetterAuthRepository.mapAuthResponseToResult({
+      token: result.token,
+      user: result.user,
+    });
   }
 }
