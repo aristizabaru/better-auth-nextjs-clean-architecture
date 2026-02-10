@@ -1,3 +1,5 @@
+import "server-only";
+
 import { auth } from "@/lib/auth/auth";
 import { SignUpFailedError } from "../../domain/errors/SignUpFailedError";
 import type { AuthRepository } from "../../application/ports/AuthRepository";
@@ -17,7 +19,7 @@ export class BetterAuthRepository implements AuthRepository {
 
     try {
       result = await auth.api.signUpEmail({ body: input });
-    } catch () {
+    } catch {
       throw new SignUpFailedError();
     }
 
