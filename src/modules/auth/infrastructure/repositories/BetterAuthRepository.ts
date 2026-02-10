@@ -12,6 +12,7 @@ import type {
   SignInResult,
   SignUpResult,
 } from "../../application/dtos/AuthFlowResult";
+import { SignOutFailedError } from "../../domain/errors/SignOutFailedError";
 
 type SignUpEmailResponse = Awaited<ReturnType<typeof auth.api.signUpEmail>>;
 type SignInEmailResponse = Awaited<ReturnType<typeof auth.api.signInEmail>>;
@@ -59,5 +60,13 @@ export class BetterAuthRepository implements AuthRepository {
       token: result.token,
       user: result.user,
     });
+  }
+
+  async signOut(request: { headers: Headers }): Promise<void> {
+    try {
+      await auth.api.signOut({ headers: request.headers });
+    } catch {
+      throw new SignOutFailedError();
+    }
   }
 }
