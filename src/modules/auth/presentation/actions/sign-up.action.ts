@@ -19,7 +19,8 @@ export async function signUpAction(
     return { ok: false, message: "Datos inválidos. Revisa el formulario." };
   }
 
-  // 2) Ejecutar caso de uso
+  // 2) Ejecutar caso de uso inyectando repositorio que implementa
+  // la lógica de negocio (sin detalles de infraestructura)
   try {
     const useCase = new SignUpWithEmail(new BetterAuthRepository());
     const result = await useCase.execute(parsed.data);
