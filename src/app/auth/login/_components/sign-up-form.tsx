@@ -25,7 +25,7 @@ const formSchema = z.object({
     .min(1, "El campo es requerido"),
   password: z
     .string()
-    .min(8, "El campo debe tener al menos 6 caracteres")
+    .min(8, "El campo debe tener al menos 8 caracteres")
     .max(50, "El campo no debe superar los 50 caracteres"),
 });
 
