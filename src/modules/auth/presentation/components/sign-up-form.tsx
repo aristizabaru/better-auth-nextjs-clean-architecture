@@ -17,22 +17,12 @@ import {
 import { useRouter } from "next/navigation";
 import { routes } from "@/shared/config/routes";
 import { signUpAction } from "@/modules/auth/presentation/actions/sign-up.action";
-
-const formSchema = z.object({
-  name: z.string().min(1, "El campo es requerido"),
-  email: z
-    .email("Dirección de correo electrónico no válida")
-    .min(1, "El campo es requerido"),
-  password: z
-    .string()
-    .min(8, "El campo debe tener al menos 8 caracteres")
-    .max(50, "El campo no debe superar los 50 caracteres"),
-});
+import { signUpSchema } from "../validators/sign-up.schema";
 
 export const SignUpForm = () => {
   const router = useRouter();
-  const form = useForm<z.infer<typeof formSchema>>({
-    resolver: zodResolver(formSchema),
+  const form = useForm<z.infer<typeof signUpSchema>>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
       name: "",
       email: "",
@@ -41,7 +31,7 @@ export const SignUpForm = () => {
   });
   const { isSubmitting } = form.formState;
 
-  async function onSubmit(data: z.infer<typeof formSchema>) {
+  async function onSubmit(data: z.infer<typeof signUpSchema>) {
     const res = await signUpAction(data);
 
     if (!res.ok) {
