@@ -1,3 +1,4 @@
+import { SignInForm, SignUpForm } from "@/modules/auth/presentation/components";
 import {
   Card,
   CardContent,
@@ -8,8 +9,6 @@ import {
   TabsList,
   TabsTrigger,
 } from "@/shared/components";
-import { SignUpForm } from "./_components/sign-up-form";
-import { SignInForm } from "./_components/sign-in-form";
 
 export default function Login() {
   return (
