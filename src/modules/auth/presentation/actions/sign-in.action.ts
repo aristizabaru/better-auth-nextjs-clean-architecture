@@ -1,10 +1,10 @@
 "use server";
 
-import { signInSchema } from "../validators/sign-in.schema";
-import { BetterAuthRepository } from "../../infrastructure/repositories/BetterAuthRepository";
-import { mapAuthErrorToMessage } from "../errors/error-mapper";
-import { SignInResult } from "../../application/dtos/AuthFlowResult";
-import { SignInWithEmail } from "../../application/use-cases/SignInWithEmail";
+import { SignInWithEmail } from "../../application/use-cases";
+import { SignInResult } from "../../application/dtos";
+import { BetterAuthRepository } from "../../infrastructure/repositories";
+import { signInSchema } from "../validators";
+import { mapAuthErrorToMessage } from "../errors";
 
 export type SignInActionResult =
   | { ok: true; status: SignInResult["status"] }

@@ -1,9 +1,9 @@
 "use server";
 
-import { BetterAuthRepository } from "../../infrastructure/repositories/BetterAuthRepository";
-import { mapAuthErrorToMessage } from "../errors/error-mapper";
-import { SignOut } from "../../application/use-cases/SignOut";
 import { headers } from "next/headers";
+import { SignOut } from "../../application/use-cases";
+import { BetterAuthRepository } from "../../infrastructure/repositories";
+import { mapAuthErrorToMessage } from "../errors";
 
 export type SignOutActionResult = { ok: true } | { ok: false; message: string };
 
