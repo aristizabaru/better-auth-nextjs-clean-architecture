@@ -1,18 +1,20 @@
 import "server-only";
 
 import { auth } from "@/lib/auth/auth";
-import { SignUpFailedError } from "../../domain/errors/SignUpFailedError";
-import { SignInFailedError } from "../../domain/errors/SignInFailedError";
-import type { AuthRepository } from "../../application/ports/AuthRepository";
-import type { BetterAuthUser } from "../types/better-auth.types";
-import type { SignUpEmailInput } from "../../application/dtos/SignUpEmailInput";
-import type { SignInEmailInput } from "../../application/dtos/SignInEmailInput";
-import type {
-  AuthFlowResult,
+import {
+  SignInFailedError,
+  SignOutFailedError,
+  SignUpFailedError,
+} from "../../domain/errors";
+import { AuthRepository } from "../../application/ports";
+import {
+  AuthenticationResult,
+  SignInEmailInput,
   SignInResult,
+  SignUpEmailInput,
   SignUpResult,
-} from "../../application/dtos/AuthFlowResult";
-import { SignOutFailedError } from "../../domain/errors/SignOutFailedError";
+} from "../../application/dtos";
+import { BetterAuthUser } from "../types";
 
 type SignUpEmailResponse = Awaited<ReturnType<typeof auth.api.signUpEmail>>;
 type SignInEmailResponse = Awaited<ReturnType<typeof auth.api.signInEmail>>;
@@ -25,7 +27,7 @@ export class BetterAuthRepository implements AuthRepository {
   private static mapAuthResponseToResult(result: {
     token: string | null;
     user: BetterAuthUser;
-  }): AuthFlowResult {
+  }): AuthenticationResult {
     const base = BetterAuthRepository.mapUser(result.user);
     return result.token === null
       ? { status: "PENDING_VERIFICATION", ...base }
