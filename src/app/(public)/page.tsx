@@ -1,7 +1,7 @@
 import Link from "next/link";
 import { Badge, Button } from "@/shared/components";
 import { routes } from "@/shared/config/routes";
-import { getServerSession } from "@/modules/auth/presentation/server/get-session";
+import { getServerSession } from "@/modules/auth/presentation/server";
 import { SignOutButton } from "@/modules/auth/presentation/components";
 
 export default async function Home() {
