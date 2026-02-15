@@ -1,6 +1,9 @@
-import { SignInResult, SignUpResult } from "../dtos/AuthFlowResult";
-import { SignInEmailInput } from "../dtos/SignInEmailInput";
-import { SignUpEmailInput } from "../dtos/SignUpEmailInput";
+import {
+  SignInEmailInput,
+  SignInResult,
+  SignUpEmailInput,
+  SignUpResult,
+} from "../dtos";
 
 export interface AuthRepository {
   signUpWithEmail(input: SignUpEmailInput): Promise<SignUpResult>;
