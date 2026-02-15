@@ -11,6 +11,7 @@ const serverSchema = z.object({
   BETTER_AUTH_TRUSTED_ORIGINS: z
     .string()
     .min(1, "BETTER_AUTH_TRUSTED_ORIGINS es requerida"),
+  AUTH_ALLOWED_EMAIL_DOMAINS: z.string(),
 });
 
 export const envServer = (() => {
