@@ -1,10 +1,12 @@
 "use server";
 
-import { signUpSchema } from "../validators/sign-up.schema";
-import { BetterAuthRepository } from "../../infrastructure/repositories/BetterAuthRepository";
-import { SignUpWithEmail } from "../../application/use-cases/SignUpWithEmail";
-import { mapAuthErrorToMessage } from "../errors/error-mapper";
+import { EmailDomainPolicy } from "../../domain/services";
+import { SignUpWithEmail } from "../../application/use-cases";
 import { SignUpResult } from "../../application/dtos/AuthFlowResult";
+import { EnvAllowedEmailDomainsProvider } from "../../infrastructure/providers";
+import { BetterAuthRepository } from "../../infrastructure/repositories";
+import { signUpSchema } from "../validators";
+import { mapAuthErrorToMessage } from "../errors";
 
 export type SignUpActionResult =
   | { ok: true; status: SignUpResult["status"] }
@@ -22,7 +24,11 @@ export async function signUpAction(
   // 2) Ejecutar caso de uso inyectando repositorio que implementa
   // la lógica de negocio (sin detalles de infraestructura)
   try {
-    const useCase = new SignUpWithEmail(new BetterAuthRepository());
+    const useCase = new SignUpWithEmail(
+      new BetterAuthRepository(),
+      new EnvAllowedEmailDomainsProvider(),
+      new EmailDomainPolicy(),
+    );
     const result = await useCase.execute(parsed.data);
 
     return { ok: true, status: result.status };
