@@ -1,5 +1,3 @@
-import { AuthRepository } from "../ports";
-
 // Un Caso de Uso representa una acción específica que el sistema
 // puede ejecutar desde la perspectiva del negocio.
 //
@@ -18,14 +16,3 @@ import { AuthRepository } from "../ports";
 //
 // El Caso de Uso decide "cuándo" aplicar reglas;
 // el dominio define "cómo" se comportan esas reglas.
-
-export class SignOut {
-  constructor(private readonly authRepo: AuthRepository) {}
-
-  async execute(request: { headers: Headers }): Promise<void> {
-    // Reglas caso de uso:
-    // Ejm: Validar que el usuario esté autenticado antes de cerrar sesión.
-
-    return this.authRepo.signOut(request);
-  }
-}
