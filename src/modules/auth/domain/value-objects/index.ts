@@ -1,1 +1,1 @@
-export { Email } from "./Email";
+export * from "./email.value-object";

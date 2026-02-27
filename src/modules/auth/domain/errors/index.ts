@@ -1,5 +1,5 @@
-export { EmailDomainNotAllowedError } from "./EmailDomainNotAllowedError";
-export { InvalidEmailError } from "./InvalidEmailError";
-export { SignInFailedError } from "./SignInFailedError";
-export { SignOutFailedError } from "./SignOutFailedError";
-export { SignUpFailedError } from "./SignUpFailedError";
+export * from "./email-domain-not-allowed.error";
+export * from "./invalid-email.error";
+export * from "./sign-in-failed.error";
+export * from "./sign-out-failed.error";
+export * from "./sign-up-failed.error";

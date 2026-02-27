@@ -1,3 +1,4 @@
+// Entity:
 // Una Entidad representa un concepto central del dominio
 // que posee identidad propia y continuidad en el tiempo.
 //

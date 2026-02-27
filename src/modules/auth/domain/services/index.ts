@@ -1,1 +1,1 @@
-export { EmailDomainPolicy } from "./EmailDomainPolicy";
+export * from "./email-domain-policy.domain-service";
