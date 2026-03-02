@@ -1,1 +1,1 @@
-export { BetterAuthRepository } from "./BetterAuthRepository";
+export { BetterAuthRepository } from "./better-auth-repository.adapter";
