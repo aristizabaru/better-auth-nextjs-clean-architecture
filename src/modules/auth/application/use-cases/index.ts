@@ -1,3 +1,3 @@
-export { SignInWithEmail } from "./SignInWithEmail";
-export { SignOut } from "./SignOut";
-export { SignUpWithEmail } from "./SignUpWithEmail";
+export * from "./sign-in-with-email.use-case";
+export * from "./sign-out.use-case";
+export * from "./sign-up-with-email.use-case";

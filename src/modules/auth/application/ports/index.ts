@@ -1,2 +1,2 @@
-export type { AllowedEmailDomainsProvider } from "./providers/AllowedEmailDomainsProvider";
-export type { AuthRepository } from "./repositories/AuthRepository";
+export * from "./providers";
+export * from "./repositories";
