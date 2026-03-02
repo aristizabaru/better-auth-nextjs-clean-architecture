@@ -1,1 +1,1 @@
-export * from "./email-domain-policy.domain-service";
+export * from "./email-domain-allow-list-policy.domain-service";

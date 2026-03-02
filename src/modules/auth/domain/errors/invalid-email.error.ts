@@ -1,8 +1,10 @@
-class InvalidEmailError extends Error {
+import { DomainError } from "./domain-error-base.error";
+
+class InvalidEmailError extends DomainError<"INVALID_EMAIL"> {
   readonly code = "INVALID_EMAIL" as const;
 
-  constructor(message = "INVALID_EMAIL") {
-    super(message);
+  constructor(public readonly rawValue?: string) {
+    super("INVALID_EMAIL");
   }
 }
 
