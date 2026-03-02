@@ -1,28 +1,27 @@
 "use server";
 
-import { SignInWithEmail } from "../../application/use-cases";
-import { SignInResult } from "../../application/dtos";
-import { BetterAuthRepository } from "../../infrastructure/repositories";
+import {
+  SignInResultDTO,
+  SignInWithEmailUseCase,
+} from "@/modules/auth/application";
+import { BetterAuthRepository } from "@/modules/auth/infrastructure";
 import { signInSchema } from "../validators";
 import { mapAuthErrorToMessage } from "../errors";
 
-export type SignInActionResult =
-  | { ok: true; status: SignInResult["status"] }
+type SignInActionResult =
+  | { ok: true; status: SignInResultDTO["status"] }
   | { ok: false; message: string };
 
-export async function signInAction(
-  input: unknown,
-): Promise<SignInActionResult> {
+async function signInAction(input: unknown): Promise<SignInActionResult> {
   // 1) Validación server-side (seguro)
   const parsed = signInSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, message: "Datos inválidos. Revisa el formulario." };
   }
-
-  // 2) Ejecutar caso de uso inyectando repositorio que implementa
-  // la lógica de negocio (sin detalles de infraestructura)
+  // 2) Inyectando repositorio (adaptador) que implementa
+  // el puerto hacia el proveedor de autenticación
   try {
-    const useCase = new SignInWithEmail(new BetterAuthRepository());
+    const useCase = new SignInWithEmailUseCase(new BetterAuthRepository());
     const result = await useCase.execute(parsed.data);
 
     return { ok: true, status: result.status };
@@ -31,3 +30,5 @@ export async function signInAction(
     return { ok: false, message: mapAuthErrorToMessage(e) };
   }
 }
+
+export { signInAction };

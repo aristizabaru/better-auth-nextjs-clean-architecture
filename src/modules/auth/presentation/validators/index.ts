@@ -1,2 +1,2 @@
-export { signInSchema } from "./sign-in.schema";
-export { signUpSchema } from "./sign-up.schema";
+export * from "./sign-in.schema";
+export * from "./sign-up.schema";

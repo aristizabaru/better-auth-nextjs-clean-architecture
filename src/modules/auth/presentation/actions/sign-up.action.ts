@@ -1,30 +1,32 @@
 "use server";
 
-import { EmailDomainPolicy } from "../../domain/services";
-import { SignUpWithEmail } from "../../application/use-cases";
-import { SignUpResult } from "../../application/dtos/AuthFlowResult";
-import { EnvAllowedEmailDomainsProvider } from "../../infrastructure/providers";
-import { BetterAuthRepository } from "../../infrastructure/repositories";
+import { EmailDomainPolicy } from "@/modules/auth/domain";
+import {
+  SignUpResultDTO,
+  SignUpWithEmailUseCase,
+} from "@/modules/auth/application";
+import {
+  BetterAuthRepository,
+  EnvAllowedEmailDomainsProvider,
+} from "@/modules/auth/infrastructure";
 import { signUpSchema } from "../validators";
 import { mapAuthErrorToMessage } from "../errors";
 
-export type SignUpActionResult =
-  | { ok: true; status: SignUpResult["status"] }
+type SignUpActionResult =
+  | { ok: true; status: SignUpResultDTO["status"] }
   | { ok: false; message: string };
 
-export async function signUpAction(
-  input: unknown,
-): Promise<SignUpActionResult> {
+async function signUpAction(input: unknown): Promise<SignUpActionResult> {
   // 1) Validación server-side (seguro)
   const parsed = signUpSchema.safeParse(input);
   if (!parsed.success) {
     return { ok: false, message: "Datos inválidos. Revisa el formulario." };
   }
 
-  // 2) Ejecutar caso de uso inyectando repositorio que implementa
-  // la lógica de negocio (sin detalles de infraestructura)
+  // 2) Inyectando repositorio (adaptador) que implementa
+  // el puerto hacia el proveedor de autenticación
   try {
-    const useCase = new SignUpWithEmail(
+    const useCase = new SignUpWithEmailUseCase(
       new BetterAuthRepository(),
       new EnvAllowedEmailDomainsProvider(),
       new EmailDomainPolicy(),
@@ -37,3 +39,5 @@ export async function signUpAction(
     return { ok: false, message: mapAuthErrorToMessage(e) };
   }
 }
+
+export { signUpAction };

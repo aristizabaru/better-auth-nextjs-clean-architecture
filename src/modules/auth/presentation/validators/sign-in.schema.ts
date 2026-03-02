@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const signInSchema = z.object({
+const signInSchema = z.object({
   email: z
     .email("Dirección de correo electrónico no válida")
     .min(1, "El campo es requerido"),
@@ -9,3 +9,5 @@ export const signInSchema = z.object({
     .min(8, "El campo debe tener al menos 8 caracteres")
     .max(50, "El campo no debe superar los 50 caracteres"),
 });
+
+export { signInSchema };

@@ -1,1 +1,1 @@
-export { mapAuthErrorToMessage } from "./error-mapper";
+export * from "./error-mapper";

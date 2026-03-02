@@ -4,9 +4,9 @@ import {
   SignInFailedError,
   SignOutFailedError,
   SignUpFailedError,
-} from "../../domain/errors";
+} from "@/modules/auth/domain";
 
-export function mapAuthErrorToMessage(e: unknown): string {
+function mapAuthErrorToMessage(e: unknown): string {
   if (e instanceof SignUpFailedError) return "Algo ha fallado en el registro.";
   if (e instanceof SignInFailedError)
     return "Algo ha fallado en el inicio de sesión.";
@@ -21,3 +21,5 @@ export function mapAuthErrorToMessage(e: unknown): string {
   console.error("Auth error:", e);
   return "Error inesperado. Intenta de nuevo.";
 }
+
+export { mapAuthErrorToMessage };
