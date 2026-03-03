@@ -1,24 +1,23 @@
 "use server";
 
-import { headers } from "next/headers";
-import { SignOutUseCase } from "@/modules/auth/application";
-import { BetterAuthRepository } from "@/modules/auth/infrastructure";
+import { makeSignOutUseCase } from "@/modules/auth/infrastructure";
 import { mapAuthErrorToMessage } from "../errors";
 
 type SignOutActionResult = { ok: true } | { ok: false; message: string };
 
 async function signOutAction(): Promise<SignOutActionResult> {
-  // 1) Ejecutar caso de uso inyectando repositorio que implementa
-  // la lógica de negocio (sin detalles de infraestructura)
+  // 1) Caso de Uso ya ensamblado
   try {
-    const useCase = new SignOutUseCase(new BetterAuthRepository());
-    await useCase.execute({ headers: await headers() });
+    const useCase = makeSignOutUseCase();
+
+    // Application no conoce headers/cookies. El contexto lo obtiene el Provider en Infra.
+    await useCase.execute();
 
     return { ok: true };
   } catch (e) {
-    // 3) Mapping de errores del dominio a mensajes UX y retorno de respuesta
     return { ok: false, message: mapAuthErrorToMessage(e) };
   }
 }
 
 export { signOutAction };
+export type { SignOutActionResult };
