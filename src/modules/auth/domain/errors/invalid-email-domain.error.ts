@@ -1,4 +1,4 @@
-import { DomainError } from "./domain-error-base.error";
+import { DomainError } from "./domain-error.base";
 
 class InvalidEmailDomainError extends DomainError<"INVALID_EMAIL_DOMAIN"> {
   readonly code = "INVALID_EMAIL_DOMAIN" as const;
