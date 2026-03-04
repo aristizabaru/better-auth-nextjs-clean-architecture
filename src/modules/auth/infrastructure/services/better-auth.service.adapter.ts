@@ -1,7 +1,6 @@
 import "server-only";
 
 import { auth } from "@/lib/auth/auth";
-import type { BetterAuthUser } from "../types";
 
 import type {
   AuthService,
@@ -14,6 +13,9 @@ import type {
 } from "@/modules/auth/application";
 
 import { AuthProviderOperationFailedError } from "@/modules/auth/application";
+
+type BetterAuthSession = typeof auth.$Infer.Session;
+type BetterAuthUser = BetterAuthSession["user"];
 
 type SignUpEmailResponse = Awaited<ReturnType<typeof auth.api.signUpEmail>>;
 type SignInEmailResponse = Awaited<ReturnType<typeof auth.api.signInEmail>>;
