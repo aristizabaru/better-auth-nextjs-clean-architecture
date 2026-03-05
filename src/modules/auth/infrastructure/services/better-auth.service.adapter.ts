@@ -1,10 +1,10 @@
 import "server-only";
 
+import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
 
 import type {
   AuthService,
-  AuthRequestContext,
   SignInEmailInputDTO,
   SignInResultDTO,
   SignUpEmailInputDTO,
@@ -12,20 +12,22 @@ import type {
   AuthenticationResultDTO,
 } from "@/modules/auth/application";
 
+import {
+  BetterAuthUser,
+  SignInEmailResponse,
+  SignUpEmailResponse,
+} from "./services.types";
+
 import { AuthProviderOperationFailedError } from "@/modules/auth/application";
-
-type BetterAuthSession = typeof auth.$Infer.Session;
-type BetterAuthUser = BetterAuthSession["user"];
-
-type SignUpEmailResponse = Awaited<ReturnType<typeof auth.api.signUpEmail>>;
-type SignInEmailResponse = Awaited<ReturnType<typeof auth.api.signInEmail>>;
 
 /**
  * BetterAuthAuthService (Infrastructure Adapter):
- * Implementa el Port AuthService usando Better Auth.
+ * Implementa AuthService usando Better Auth.
  *
- * Infraestructura conoce el SDK (auth) y sus tipos/formatos.
- * Mapea respuestas externas a DTOs de Application.
+ * Importante:
+ * - Este SDK requiere `headers` en sus llamadas (error: "Headers is required").
+ * - `headers()` es un detalle técnico del runtime de Next.js, por lo tanto
+ *   se resuelve aquí (Infrastructure) y no en Application.
  */
 class BetterAuthAuthService implements AuthService {
   private static mapUser(user: BetterAuthUser) {
@@ -47,7 +49,10 @@ class BetterAuthAuthService implements AuthService {
     let result: SignUpEmailResponse;
 
     try {
-      result = await auth.api.signUpEmail({ body: input });
+      result = await auth.api.signUpEmail({
+        body: input,
+        headers: await headers(),
+      });
     } catch (cause) {
       throw new AuthProviderOperationFailedError("AUTH_SIGN_UP_FAILED", cause);
     }
@@ -62,7 +67,10 @@ class BetterAuthAuthService implements AuthService {
     let result: SignInEmailResponse;
 
     try {
-      result = await auth.api.signInEmail({ body: input });
+      result = await auth.api.signInEmail({
+        body: input,
+        headers: await headers(),
+      });
     } catch (cause) {
       throw new AuthProviderOperationFailedError("AUTH_SIGN_IN_FAILED", cause);
     }
@@ -73,22 +81,11 @@ class BetterAuthAuthService implements AuthService {
     });
   }
 
-  async signOut(context: AuthRequestContext): Promise<void> {
-    /**
-     * El contexto es opaco para Application. Aquí lo interpretamos.
-     * Para Better Auth normalmente se requieren headers/cookies.
-     */
-    const maybeHeaders = (context as Record<string, unknown>)["headers"];
-
-    if (!(maybeHeaders instanceof Headers)) {
-      // Esto es un fallo de wiring/composición (Infra/Presentation), no del dominio.
-      throw new AuthProviderOperationFailedError("AUTH_SIGN_OUT_FAILED", {
-        reason: "INVALID_AUTH_CONTEXT_HEADERS",
-      });
-    }
-
+  async signOut(): Promise<void> {
     try {
-      await auth.api.signOut({ headers: maybeHeaders });
+      await auth.api.signOut({
+        headers: await headers(),
+      });
     } catch (cause) {
       throw new AuthProviderOperationFailedError("AUTH_SIGN_OUT_FAILED", cause);
     }

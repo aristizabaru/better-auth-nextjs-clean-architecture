@@ -6,7 +6,6 @@ import {
   SignUpWithEmailUseCase,
   type AllowedEmailDomainsProvider,
   type AuthService,
-  type RequestContextProvider,
   type SessionProvider,
 } from "@/modules/auth/application";
 
@@ -16,16 +15,11 @@ import {
   BetterAuthAuthService,
   BetterAuthSessionProvider,
   EnvAllowedEmailDomainsProvider,
-  NextJsRequestContextProvider,
 } from "@/modules/auth/infrastructure";
 
 /**
  * AuthUseCases:
- * Conjunto de Casos de Uso del módulo de autenticación ya ensamblados.
- *
- * Composition Root:
- * - Único lugar donde se instancian Adapters de Infrastructure.
- * - Presentation consume Casos de Uso ya cableados.
+ * Casos de uso del módulo auth ensamblados mediante Composition Root.
  */
 type AuthUseCases = Readonly<{
   signUpWithEmail: SignUpWithEmailUseCase;
@@ -33,48 +27,23 @@ type AuthUseCases = Readonly<{
   signOut: SignOutUseCase;
 }>;
 
-/**
- * AuthPorts:
- * Dependencias concretas que implementan los Ports definidos en Application.
- */
 type AuthPorts = Readonly<{
   authService: AuthService;
   allowedEmailDomainsProvider: AllowedEmailDomainsProvider;
-  requestContextProvider: RequestContextProvider;
   sessionProvider: SessionProvider;
 }>;
 
-/**
- * buildAuthPorts:
- * Construye las implementaciones concretas (Adapters) de los Ports.
- *
- * Regla:
- * - Application define contratos (Ports).
- * - Infrastructure implementa esos contratos (Adapters).
- */
 function buildAuthPorts(): AuthPorts {
-  const authService: AuthService = new BetterAuthAuthService();
-
   const allowedEmailDomainsProvider: AllowedEmailDomainsProvider =
     new EnvAllowedEmailDomainsProvider();
 
-  const requestContextProvider: RequestContextProvider =
-    new NextJsRequestContextProvider();
-
   const sessionProvider: SessionProvider = new BetterAuthSessionProvider();
 
-  return {
-    authService,
-    allowedEmailDomainsProvider,
-    requestContextProvider,
-    sessionProvider,
-  };
+  const authService: AuthService = new BetterAuthAuthService();
+
+  return { authService, allowedEmailDomainsProvider, sessionProvider };
 }
 
-/**
- * buildAuthDomainServices:
- * Construye servicios puros del dominio.
- */
 function buildAuthDomainServices(): Readonly<{
   emailDomainAllowListPolicy: EmailDomainAllowListPolicy;
 }> {
@@ -82,14 +51,8 @@ function buildAuthDomainServices(): Readonly<{
   return { emailDomainAllowListPolicy };
 }
 
-/**
- * makeAuthUseCases:
- * Factory principal del módulo. Devuelve los Casos de Uso ensamblados.
- */
 function makeAuthUseCases(): AuthUseCases {
-  const { authService, allowedEmailDomainsProvider, requestContextProvider } =
-    buildAuthPorts();
-
+  const { authService, allowedEmailDomainsProvider } = buildAuthPorts();
   const { emailDomainAllowListPolicy } = buildAuthDomainServices();
 
   const signUpWithEmail = new SignUpWithEmailUseCase(
@@ -100,15 +63,11 @@ function makeAuthUseCases(): AuthUseCases {
 
   const signInWithEmail = new SignInWithEmailUseCase(authService);
 
-  const signOut = new SignOutUseCase(authService, requestContextProvider);
+  const signOut = new SignOutUseCase(authService);
 
   return { signUpWithEmail, signInWithEmail, signOut };
 }
 
-/**
- * Factories individuales:
- * Útiles para que Presentation consuma solo lo necesario por acción.
- */
 function makeSignUpWithEmailUseCase(): SignUpWithEmailUseCase {
   return makeAuthUseCases().signUpWithEmail;
 }
@@ -122,14 +81,9 @@ function makeSignOutUseCase(): SignOutUseCase {
 }
 
 /**
- * Factories de Providers (para helpers de Presentation):
- * Permiten obtener capacidades técnicas (request context / session)
- * sin importar SDKs directamente en Presentation.
+ * Factory de Provider (para helpers de Presentation):
+ * Presentation puede consumir SessionProvider sin importar el SDK.
  */
-function makeRequestContextProvider(): RequestContextProvider {
-  return buildAuthPorts().requestContextProvider;
-}
-
 function makeSessionProvider(): SessionProvider {
   return buildAuthPorts().sessionProvider;
 }
@@ -140,6 +94,5 @@ export {
   makeSignUpWithEmailUseCase,
   makeSignInWithEmailUseCase,
   makeSignOutUseCase,
-  makeRequestContextProvider,
   makeSessionProvider,
 };

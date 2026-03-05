@@ -1,34 +1,28 @@
 import "server-only";
 
+import { headers } from "next/headers";
 import { auth } from "@/lib/auth/auth";
-import type {
-  AuthRequestContext,
-  SessionDTO,
-  SessionProvider,
-} from "@/modules/auth/application";
+import type { SessionDTO, SessionProvider } from "@/modules/auth/application";
 
 /**
  * BetterAuthSessionProvider (Infrastructure Adapter):
  * Implementa SessionProvider usando Better Auth.
  *
- * Infraestructura conoce el SDK y cómo interpretar el contexto (headers/cookies).
+ * Importante:
+ * - Better Auth requiere `headers` para leer la sesión actual en server-side.
  */
 class BetterAuthSessionProvider implements SessionProvider {
-  async getSession(context: AuthRequestContext): Promise<SessionDTO | null> {
-    const maybeHeaders = (context as Record<string, unknown>)["headers"];
-
-    if (!(maybeHeaders instanceof Headers)) {
-      // Contexto inválido => wiring incorrecto o ejecución en entorno inesperado.
-      return null;
-    }
-
-    const session = await auth.api.getSession({ headers: maybeHeaders });
+  async getSession(): Promise<SessionDTO | null> {
+    const session = await auth.api.getSession({
+      headers: await headers(),
+    });
 
     if (!session?.user) return null;
 
     return {
       userId: session.user.id,
       email: session.user.email,
+      name: session.user.name,
     };
   }
 }
