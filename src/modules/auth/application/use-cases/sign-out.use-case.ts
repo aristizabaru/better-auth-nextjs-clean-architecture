@@ -1,23 +1,18 @@
-import type { AuthService, RequestContextProvider } from "../ports";
+import type { AuthService } from "../ports";
 
 /**
  * SignOutUseCase:
  * Orquesta el cierre de sesión (reglas del proceso).
  *
  * Nota:
- * - Application no conoce HTTP/cookies/headers.
- * - Obtiene un contexto opaco mediante RequestContextProvider,
- *   y lo entrega a AuthService (integración externa).
+ * - Application no conoce cookies/headers.
+ * - El SDK/Infrastructure resuelve el detalle técnico.
  */
 class SignOutUseCase {
-  constructor(
-    private readonly authService: AuthService,
-    private readonly requestContextProvider: RequestContextProvider,
-  ) {}
+  constructor(private readonly authService: AuthService) {}
 
   async execute(): Promise<void> {
-    const context = await this.requestContextProvider.getAuthContext();
-    return this.authService.signOut(context);
+    return this.authService.signOut();
   }
 }
 

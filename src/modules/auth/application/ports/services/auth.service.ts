@@ -4,26 +4,19 @@ import type {
   SignUpEmailInputDTO,
   SignUpResultDTO,
 } from "../../dtos";
-import type { AuthRequestContext } from "../providers";
 
 /**
  * AuthService (Port - Service):
- * Abstrae la integración con el sistema externo de autenticación
- * (por ejemplo Better Auth), sin exponer SDKs, HTTP, cookies, etc.
+ * Integración con proveedor externo de autenticación.
  *
- * Importante:
- * - No es Repository: no persiste agregados del dominio.
- * - Representa colaboración externa necesaria para completar casos de uso.
+ * Nota:
+ * - Application no transporta Headers/cookies.
+ * - Infrastructure resuelve el contexto técnico requerido por el proveedor.
  */
 interface AuthService {
   signUpWithEmail(input: SignUpEmailInputDTO): Promise<SignUpResultDTO>;
   signInWithEmail(input: SignInEmailInputDTO): Promise<SignInResultDTO>;
-
-  /**
-   * Cierre de sesión.
-   * El "context" es opaco (provisto por RequestContextProvider).
-   */
-  signOut(context: AuthRequestContext): Promise<void>;
+  signOut(): Promise<void>;
 }
 
 export type { AuthService };

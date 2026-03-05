@@ -26,7 +26,6 @@ class SignUpWithEmailUseCase {
 
     const allowedDomains: AllowedEmailDomains =
       await this.allowedDomainsProvider.getAllowedDomains();
-
     this.emailDomainAllowListPolicy.assertAllowed(email, allowedDomains);
 
     return this.authService.signUpWithEmail({

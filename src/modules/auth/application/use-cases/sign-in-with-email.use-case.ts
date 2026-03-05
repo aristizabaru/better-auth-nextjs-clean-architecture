@@ -5,6 +5,7 @@ import type { AuthService } from "../ports";
 /**
  * SignInWithEmailUseCase:
  * Orquesta el inicio de sesión con email (reglas del proceso).
+ *
  * Delegación:
  * - Validación semántica del email: Value Object Email (Domain).
  * - Autenticación externa: AuthService (Port).
