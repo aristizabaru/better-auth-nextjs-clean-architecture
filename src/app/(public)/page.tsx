@@ -12,9 +12,9 @@ export default async function Home() {
       <div className="flex items-center justify-between">
         <h1 className="text-3xl font-bold">Proyecto X</h1>
 
-        {session?.user ? (
+        {session ? (
           <div className="flex gap-4">
-            <Badge className="select-none">{session.user.name}</Badge>
+            <Badge className="select-none">{session.name}</Badge>
             <SignOutButton />
           </div>
         ) : (
