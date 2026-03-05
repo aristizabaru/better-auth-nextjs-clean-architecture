@@ -17,7 +17,9 @@ export const auth = betterAuth({
     },
   },
   plugins: [nextCookies()],
-  trustedOrigins: [envServer.BETTER_AUTH_TRUSTED_ORIGINS],
+  trustedOrigins: envServer.BETTER_AUTH_TRUSTED_ORIGINS.split(",")
+    .map((s) => s.trim())
+    .filter(Boolean),
   emailAndPassword: {
     enabled: true,
   },
