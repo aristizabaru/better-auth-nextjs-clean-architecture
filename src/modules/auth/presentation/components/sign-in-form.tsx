@@ -16,8 +16,8 @@ import {
 } from "@/shared/components";
 import { useRouter } from "next/navigation";
 import { routes } from "@/shared/config/routes";
-import { signInAction } from "@/modules/auth/presentation/actions/sign-in.action";
-import { signInSchema } from "../validators/sign-in.schema";
+import { signInAction } from "../actions";
+import { signInSchema } from "../validators";
 
 export const SignInForm = () => {
   const router = useRouter();
@@ -44,6 +44,7 @@ export const SignInForm = () => {
     }
 
     router.push(routes.public.home);
+    router.refresh();
   }
 
   return (

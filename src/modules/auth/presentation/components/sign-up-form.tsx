@@ -1,9 +1,11 @@
 "use client";
 
+import { useRouter } from "next/navigation";
 import * as z from "zod";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { toast } from "sonner";
+
 import {
   Button,
   Field,
@@ -14,10 +16,9 @@ import {
   LoadingSwap,
   PasswordInput,
 } from "@/shared/components";
-import { useRouter } from "next/navigation";
 import { routes } from "@/shared/config/routes";
-import { signUpAction } from "@/modules/auth/presentation/actions/sign-up.action";
-import { signUpSchema } from "../validators/sign-up.schema";
+import { signUpAction } from "../actions";
+import { signUpSchema } from "../validators";
 
 export const SignUpForm = () => {
   const router = useRouter();
@@ -45,6 +46,7 @@ export const SignUpForm = () => {
     }
 
     router.push(routes.public.home);
+    router.refresh();
   }
 
   return (

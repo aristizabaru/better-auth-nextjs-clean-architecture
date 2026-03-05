@@ -2,8 +2,7 @@
 
 import { makeSignOutUseCase } from "@/modules/auth/infrastructure";
 import { mapAuthErrorToMessage } from "../errors";
-
-type SignOutActionResult = { ok: true } | { ok: false; message: string };
+import { SignOutActionResult } from "./actions.types";
 
 async function signOutAction(): Promise<SignOutActionResult> {
   // 1) Caso de Uso ya ensamblado
@@ -20,4 +19,3 @@ async function signOutAction(): Promise<SignOutActionResult> {
 }
 
 export { signOutAction };
-export type { SignOutActionResult };

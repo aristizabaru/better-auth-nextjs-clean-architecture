@@ -1,10 +1,11 @@
 "use client";
 
-import { signOutAction } from "@/modules/auth/presentation/actions/sign-out.action";
-import { Button } from "@/shared/components"; // o donde exportes Button
-import { toast } from "sonner";
 import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+
+import { signOutAction } from "../actions";
 import { routes } from "@/shared/config/routes";
+import { Button } from "@/shared/components";
 
 export const SignOutButton = () => {
   const router = useRouter();

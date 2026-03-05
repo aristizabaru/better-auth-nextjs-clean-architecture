@@ -1,14 +1,10 @@
 "use server";
 
-import type { SignUpResultDTO } from "@/modules/auth/application";
 import { makeSignUpWithEmailUseCase } from "@/modules/auth/infrastructure";
 
 import { signUpSchema } from "../validators";
 import { mapAuthErrorToMessage } from "../errors";
-
-type SignUpActionResult =
-  | { ok: true; status: SignUpResultDTO["status"] }
-  | { ok: false; message: string };
+import { SignUpActionResult } from "./actions.types";
 
 async function signUpAction(input: unknown): Promise<SignUpActionResult> {
   // 1) Validación estructural (Presentation)
@@ -29,4 +25,3 @@ async function signUpAction(input: unknown): Promise<SignUpActionResult> {
 }
 
 export { signUpAction };
-export type { SignUpActionResult };

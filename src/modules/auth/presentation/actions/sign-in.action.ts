@@ -1,19 +1,10 @@
 "use server";
 
-import type { SignInResultDTO } from "@/modules/auth/application";
 import { makeSignInWithEmailUseCase } from "@/modules/auth/infrastructure";
 
 import { signInSchema } from "../validators";
 import { mapAuthErrorToMessage } from "../errors";
-
-/**
- * SignInActionResult:
- * Resultado orientado a UX. Presentation decide el formato de retorno
- * para el canal (Server Actions).
- */
-type SignInActionResult =
-  | { ok: true; status: SignInResultDTO["status"] }
-  | { ok: false; message: string };
+import { SignInActionResult } from "./actions.types";
 
 async function signInAction(input: unknown): Promise<SignInActionResult> {
   // 1) Validación estructural (Presentation)
@@ -35,4 +26,3 @@ async function signInAction(input: unknown): Promise<SignInActionResult> {
 }
 
 export { signInAction };
-export type { SignInActionResult };
